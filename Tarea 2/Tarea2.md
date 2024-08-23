@@ -32,6 +32,6 @@ Implementacion *naive* donde las hormigas recuerdan donde esta su hogar
 ![alt text](image-17.png)
 ![alt text](image-19.png)
 ## Pregunta 6
-![alt text](image-21.png)
+![alt text](image-21.png)\
 Al no haber limite superior las hormigas se atascan, moviendose hacia donde hay mas concentracion de quimico, es decir en el camino y no en a comida. Esto hace que se corte el rastro de quimico.
 ![alt text](image-20.png)
