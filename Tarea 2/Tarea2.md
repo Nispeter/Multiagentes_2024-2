@@ -1,6 +1,5 @@
 # Tarea 2
-Nicolas Parra Garcia\
-2029422588
+Nicolas Parra & Rodolfo Vergara
 ## Pregunta 1
 ### Comportamiento normal 
 ![alt text](image-6.png)
