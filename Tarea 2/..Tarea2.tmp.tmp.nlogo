@@ -109,7 +109,7 @@ to look-for-food  ;; turtle procedure
     rt 180                   ;; and turn around
     stop ]
   ;; go in the direction where the chemical smell is strongest
-  if (chemical >= 0.05) and (chemical < 2)
+  if (chemical >= 0.05)
   [ uphill-chemical ]
 end
 
@@ -120,7 +120,7 @@ to uphill-chemical  ;; turtle procedure
   let scent-right chemical-scent-at-angle  45   ;; Verificacion de chemical scent en parche en frente a la izquierda
   let scent-left  chemical-scent-at-angle -45   ;; Verificacion de chemical scent en parche en frente a la derecha
   if (scent-right > scent-ahead) or (scent-left > scent-ahead) ;; Comparacion de valor de chemical scent
-  [ ifelse scent-right > scent-left ;; Rotacion en direccion respectica dependiendo de cual sea el mayor
+  [ ifelse scent-right > scent-left ;; Rotacion en direccion respectia dependiendo de cual sea el mayor
     [ rt 45 ]
     [ lt 45 ] ]
 end
