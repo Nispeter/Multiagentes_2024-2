@@ -1,6 +1,6 @@
 breed [personas persona]
 personas-own [angulo energia edad ]
-globals [parejas angulo-pareja color-pareja error-gen angulo-random brush-radius]
+globals [parejas angulo-pareja color-pareja error-gen angulo-random]
 
 to setup
   __clear-all-and-reset-ticks
@@ -23,7 +23,7 @@ end
 
 to crear-agentes
   create-personas  cantidad-agentes
-  ask personas [setxy random-xcor random-ycor set angulo random 10000  set heading angulo set energia 1000 set edad 0 set shape "cow"]
+  ask personas [setxy random-xcor random-ycor set angulo random 10000  set heading angulo set energia 1000 set edad 0 set shape "person"]
 end
 
 
@@ -35,7 +35,7 @@ end
 
 
 to crear-fuego
-  ask patches [if ((pycor > 5 ) and (pycor <  40 )) and ((pxcor > 130) and (pxcor < 153 ))
+  ask patches [if ((pycor > 5 ) and (pycor <  40 )) and ((pxcor > -60) and (pxcor < -20 ))
   [ set pcolor red]]
 end
 
@@ -52,17 +52,37 @@ end
 
 
 to verificar-reproduccion
-  set error-gen (random(100) + 1)
-  set angulo-random (random (360))
-  ask personas [ if (any? other personas-here) and (energia > 1500)
-    [
+  set error-gen (random 100) + 1  ;; posibilidad de error genetico
+  set angulo-random (random 360)  ;; angulo aleatorio de nacimiento
+  ask personas [
+    if (any? other personas-here) and (energia > 1500) [
       let persona-alcanzada one-of personas-here
-     ask persona-alcanzada  [ set angulo-pareja angulo set color-pareja color ]
-      if ((abs (color-pareja - color) > 2) and ( count personas-here < 3)   )
- [ set energia energia - 500 hatch-personas 1 [ set edad 0 set color  ( abs (int ((color - color-pareja) / 2 ))) setxy (xcor + random 5 ) (ycor + random 5 ) set heading ((angulo + angulo-pareja) / 2)  set energia 500 ]]
+      ask persona-alcanzada [
+        set angulo-pareja angulo
+        set color-pareja color
+      ]
+      if (abs (color-pareja - color) > 2) and (count personas-here < 3) [
+        set energia energia - 500
+        hatch-personas 1 [
+          set edad 0
+          set color (abs (int ((color - color-pareja) / 2)))
+          setxy (xcor + random 5) (ycor + random 5)
+          set heading ((angulo + angulo-pareja) / 2)
+          set energia 500
+
+          ;; Aplicar error genético si se cumple la condición
+          if error-gen < error-genetico [  ;; probabilidad dictada por el slider
+            ;; Alterar el color del nuevo agente por una mutación
+            set color (color + random 20 - 10)  ;; Cambia el color en un rango aleatorio
+            ;; Alterar el ángulo de dirección
+            set heading (heading + angulo-random )  ;; Cambia el ángulo en un rango aleatorio
+          ]
+        ]
       ]
     ]
+  ]
 end
+
 
 
 to verificar-muerte
@@ -76,37 +96,31 @@ to graficar
   plot count turtles
 end
 
-to set-patch-color [new-color]
-
-  if any? patch in-radius brush-radius
-  ask patches[
-    if pxcor = round mouse-xcor and round pycor = mouse-ycor [
-      set pcolor new-color
-    ]
-  ]
-end
-
 to pintar
-  if option = "alimento"[
-    if mouse-down? [
-      set-patch-color green
-    ]
-  ]
-  if option = "veneno" [
-    if mouse-down? [
-      set-patch-color red
+  if mouse-down? [
+    let mx mouse-xcor
+    let my mouse-ycor
+    ask patches [
+      if (distancexy mx my) <= brush-radius [
+        if option = "alimento" [
+          set pcolor green
+        ]
+        if option = "veneno" [
+          set pcolor red
+        ]
+      ]
     ]
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-216
-62
-1026
-473
+436
+24
+1047
+636
 -1
 -1
-2.0
+3.0
 1
 10
 1
@@ -116,8 +130,8 @@ GRAPHICS-WINDOW
 1
 1
 1
--200
-200
+-100
+100
 -100
 100
 0
@@ -135,7 +149,7 @@ CANTIDAD-AGENTES
 CANTIDAD-AGENTES
 0
 1000
-658.0
+709.0
 1
 1
 NIL
@@ -150,7 +164,7 @@ APORTE-ALIMENTO
 APORTE-ALIMENTO
 0
 100
-95.0
+50.0
 1
 1
 NIL
@@ -165,7 +179,7 @@ TOXICIDAD-VENENO
 TOXICIDAD-VENENO
 0
 100
-14.0
+50.0
 1
 1
 NIL
@@ -179,8 +193,8 @@ SLIDER
 EDAD-MAXIMA
 EDAD-MAXIMA
 0
-1000
-1000.0
+100000
+35000.0
 1
 1
 NIL
@@ -205,10 +219,10 @@ PENS
 "totalAgentes" 1.0 0 -16777216 true "" "plot count turtles"
 
 BUTTON
-1102
-301
-1166
-334
+1108
+320
+1172
+353
 NIL
 Setup
 NIL
@@ -222,10 +236,10 @@ NIL
 1
 
 BUTTON
-1176
-301
-1239
-334
+1182
+320
+1245
+353
 NIL
 Go
 T
@@ -239,10 +253,10 @@ NIL
 1
 
 MONITOR
-1143
-350
-1208
-395
+1149
+369
+1214
+414
 NIL
 personas
 17
@@ -250,14 +264,14 @@ personas
 11
 
 CHOOSER
-1109
-411
-1247
-456
+1115
+430
+1253
+475
 option
 option
 "veneno" "alimento"
-0
+1
 
 SLIDER
 1101
@@ -268,7 +282,22 @@ ERROR-GENETICO
 ERROR-GENETICO
 0
 100
-50.0
+40.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+1101
+255
+1273
+288
+BRUSH-RADIUS
+BRUSH-RADIUS
+0
+100
+8.0
 1
 1
 NIL
