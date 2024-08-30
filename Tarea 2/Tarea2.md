@@ -1,6 +1,5 @@
 # Tarea 2
-Nicolas Parra Garcia\
-2029422588
+Nicolas Parra & Rodolfo Vergara
 ## Pregunta 1
 ### Comportamiento normal 
 ![alt text](image-6.png)
@@ -19,7 +18,7 @@ El quimico es detectable de muy lejos por lo que confunde a las hormigas.
 ## Pregunta 2
 - **SetupFood:** ![alt text](image-12.png)
 - **to-go:**![alt text](image-15.png)
--**Uphill-chemical:**![alt text](image-16.png)
+-**Uphill-chemical:**![alt text](image-22.png)
 -**Wiggle:** ![alt text](image-14.png)
 ## Pregunta 3
 Al recoger comida se hace la llamada a  uphill-nest-scent el cual verifica constantemente si la tortuga se encuentra en el nest, de lo contrario sigue el nest-chemical con un angulo de busqueda entre -45 y 45 grados y se mueve hasta llegar a este. 
@@ -33,5 +32,5 @@ Implementacion *naive* donde las hormigas recuerdan donde esta su hogar
 ![alt text](image-19.png)
 ## Pregunta 6
 ![alt text](image-21.png)\
-Al no haber limite superior las hormigas se atascan, moviendose hacia donde hay mas concentracion de quimico, es decir en el camino y no en a comida. Esto hace que se corte el rastro de quimico.
+Al no haber limite superior las hormigas se atascan, moviendose hacia donde hay mas concentracion de quimico, es decir en el camino y no en la comida. Esto hace que se corte el rastro de quimico.
 ![alt text](image-20.png)
