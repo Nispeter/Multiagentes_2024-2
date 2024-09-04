@@ -15,7 +15,7 @@ El modelo se enfocará en la simulación de toma de decisiones utilizando un sis
 Mason, debido a que puede manejar simulaciones complejas a gran escala en combinacion a herramientas en python para manejar los agentes.
 ## Pregunta 2
 ### Gran escala
-Elegiría Repast HPC o FLAME GPU, ambas herramientas están diseñadas para simulaciones a gran escala, permitiendo la gestión eficiente de cientos de miles de agentes mediante el uso de capacidades de computación paralela.
+Pese a que para el uso de LLMs no se deberia usar una masiva cantidad de agentes, en el caso hipotetico Elegiría Repast HPC o FLAME GPU, ambas herramientas están diseñadas para simulaciones a gran escala, permitiendo la gestión eficiente de cientos de miles de agentes mediante el uso de capacidades de computación paralela.
 ### Agentes simples
 NetLogo sería la herramienta ideal si el comportamiento de los agentes es simple. NetLogo es conocido por su facilidad de uso y su capacidad para simular modelos con agentes sencillos, lo que permite una rápida implementación y análisis sin necesidad de conocimientos avanzados de programación.
 ### Agentes complejos

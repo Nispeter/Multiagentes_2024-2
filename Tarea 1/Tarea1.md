@@ -1,5 +1,6 @@
 # Tarea 1
-Nicolas Parra Garcia
+Nicolas Parra\
+Rodolfo Vergara
 ## Pregunta 1 
 Se cambia la forma a una persona.
 ![alt text](image-9.png)
@@ -24,4 +25,4 @@ A continuación se prestan imágenes del experimento repetido para diversos % de
 ![alt text](image-11.png)
 ### 30%
 ![alt text](image-7.png)\
-Podemos notar que a medida que la probabilidad aumenta, la dispersión de los agentes también, es decir que con el incremento de la mutación genética para cambiar de ángulo, se forman clusters menos claros y se convierte en una nube de agentes. En el gráfico se presenta como variaciones de población con cambios más bruscos (o escalados) debido a los crecimientos espontáneos por la variación en dirección.
+Podemos notar que a medida que la probabilidad aumenta, la dispersión de los agentes también, es decir que con el incremento de la mutación genética para cambiar de ángulo, se forman clusters menos claros y se convierte en una nube de agentes. En el gráfico se presenta como variaciones de población con cambios más bruscos (o escalados) muy ligeros debido a los crecimientos espontáneos por la variación en dirección.
