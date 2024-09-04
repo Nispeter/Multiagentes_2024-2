@@ -34,6 +34,14 @@ En la segunda imagen se puede observar 2 patrones distintos, aquellos que altera
 Se experimento con densidades bajas y altas (< 2% y > 90%) y las poblaciones mueren de inmediato.\
 Un patron perpetuo es este vortice que se ve divertido.\
 ![alt text](<fun figure 1 - Made with Clipchamp.gif>)
+![alt text](image-2.png)
+Este patron inicial (linea pseudo aleatorea en la mitad) convergió en un patron estático con grupos esparsos.
+![alt text](image-3.png)
+Este patron (mitad pintada) resulta en un patron en un par de pasos donde emergen lineas intercaladas parecido a un codigo de barras.
+![alt text](image-4.png)
+Esta configuración inicial (x) genera una especie de onda expansiva que converge en 4 lineas  de 3 patches que rotan constantemente.
+![alt text](image-5.png)
+Esta configuración inicial (dona) desaparece de inmediato.
 ## Pregunta 7
 Es una configuración específica del juego que genera una serie de patrones con movimiento perpetuo. Muestra la capacidad del sistema para generar patrones infinitos y autosuficientes.
 ![alt text](image-1.png)
