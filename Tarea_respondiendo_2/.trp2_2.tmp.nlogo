@@ -15,14 +15,14 @@ to setup
     set friend one-of other turtles
     set enemy one-of other turtles
   ]
-  if show-links [
+  if show_links [
   ask turtles [
       create-link-with friend
       ask link-with friend [set color cyan]
       create-link-with enemy
       ask link-with enemy [set color orange]
     ]
-
+  ]
   reset-ticks
 end
 
@@ -319,7 +319,7 @@ seed_num
 seed_num
 -10000
 10000
-10000.0
+0.0
 100
 1
 NIL
