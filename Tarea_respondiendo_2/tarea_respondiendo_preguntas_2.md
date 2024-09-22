@@ -18,6 +18,7 @@ La regla 30 es importante debido a que genera patrones aparentemente aleatoreos,
 ## Pregunta 3 
 La regla 8 es terrible fome, donde cualquier combinacion de tuplas de valores resulta en un 0 exceptuando la 100.
 ![alt text](image-1.png)
+![alt text](image-9.png)
 Se puede apreciar que la secuencia no continua debido a la poca cantidad de disponibilidad de generacion de '1s'.
 ## Pregunta 4
 Todo sistema no trivial puede ser traducido a un programa de computador.
@@ -39,3 +40,4 @@ La semilla 137 genra un punto de forma inmediata.
 La semilla 567 genera un patron estatico donde los agentes no pueden moverse.
 ![alt text](image-8.png)
 La semila 0 genera un patron en constante movimiento similar a una serpiente.
+![alt text](image-10.png)
