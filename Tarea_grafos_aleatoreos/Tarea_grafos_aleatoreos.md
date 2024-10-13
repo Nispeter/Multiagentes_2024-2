@@ -8,7 +8,11 @@ Conexiones\
 
 # Preguntas
 ## Se quilibra el grafo? Bajo que condiciones?
-https://github.com/user-attachments/assets/57b830eb-b4c6-48d6-b205-20d5c44c2c22 \
+
+
+https://github.com/user-attachments/assets/81bbe6a3-1319-466e-b722-936d44efead6
+
+
 Se realizan 2 pruebas con wire4
 - La priemra queda inestable por siempre
 - La segunda se estabiliza de inmediato
