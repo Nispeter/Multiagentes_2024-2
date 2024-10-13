@@ -8,7 +8,7 @@ Conexiones\
 
 # Preguntas
 ## Se quilibra el grafo? Bajo que condiciones?
-(https://github.com/Nispeter/Multiagentes_2024-2/blob/main/Tarea_grafos_aleatoreos/2024-10-13%2012-20-44.mp4) \\
+https://github.com/user-attachments/assets/57b830eb-b4c6-48d6-b205-20d5c44c2c22 \
 Se realizan 2 pruebas con wire4
 - La priemra queda inestable por siempre
 - La segunda se estabiliza de inmediato
@@ -19,3 +19,7 @@ En caso contrario se requieren una cantidad igual a el grado del nodo con máxim
 ## Qué problema tradicional sobre grafos se está modelando 
 Coloreo de grafos (o de mapas).\
 ![alt text](images.jpeg)
+
+
+
+
