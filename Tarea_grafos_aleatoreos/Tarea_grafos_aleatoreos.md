@@ -1,4 +1,4 @@
-# Tarea Grafos Aleatoreos 
+# Tarea Grafos Aleatorios 
 Nicolas Parra
 # Modificaciones
 Estados\
