@@ -1,74 +1,63 @@
-turtles-own [ friend enemy ]
+breed [ cells cell ] ;;cell race
 
-to setup
+cells-own [
+  hex-neighbors  ;; agentset of 6 neighboring cells
+  n              ;; used to store a count of white neighbors
+]
+to setup1
   clear-all
-  ask patches [ set pcolor white ]  ;; create a blank background
-  create-turtles number [
-    setxy random-xcor random-ycor
-
-    ;; set the turtle personalities based on chooser
-    if (personalities = "brave")     [ set color blue ]
-    if (personalities = "cowardly")  [ set color red ]
-    if (personalities = "mixed")     [ set color one-of [ red blue ] ]
-
-    ;; choose friend and enemy targets
-    set friend one-of other turtles
-    set enemy one-of other turtles
-  ]
-  if show_links [
-  ask turtles [
-      create-link-with friend
-      ask link-with friend [set color cyan]
-      create-link-with enemy
-      ask link-with enemy [set color orange]
-    ]
-  ]
+  setup-grid     ;;Funcion principal de definicion de patches
+  ask patch 0 0  ;;Celda en el patch en medio se pone de color blanco
+    [ ask cells-here
+        [ set color white ] ]
   reset-ticks
 end
 
-to go
-  ask turtles [
-    if (color = blue)  [ act-bravely ]
-    if (color = red)   [ act-cowardly ]
-  ]
+to setup2
+  clear-all
+  setup-grid
+  ask patches at-points [[0 0] [1 0]]  ;;Celda en el patch en medio se pone de color blanco y su vecino derecho
+    [ ask cells-here
+        [ set color white ] ]
+  reset-ticks
+end
+
+to setup-grid  ;; Configuración de la cuadrícula de celdas
+  set-default-shape cells "hex"  ;; Establecemos que las celdas tendrán la forma de hexágonos.
+  ask patches
+    [ sprout-cells 1  ;; En cada parche, hacemos brotar una celda.
+        [ set color gray - 3  ;; Establecemos el color inicial de las celdas en gris oscuro.
+          if pxcor mod 2 = 0  ;; Si la coordenada x del parche es par:
+            [ set ycor ycor - 0.5 ] ] ]  ;; Ajustamos la coordenada y para alinearlas en un patrón hexagonal (medio patch para abajo).
+  ;; Configuramos ahora el conjunto de vecinos hexagonales de cada celda.
+  ask cells
+    [ ifelse pxcor mod 2 = 0  ;; Si la celda está en una posición x par:
+        [ set hex-neighbors cells-on patches at-points [[0 1] [1 0] [1 -1] [0 -1] [-1 -1] [-1 0]] ]  ;; Definimos los 6 vecinos en un patrón específico.
+        [ set hex-neighbors cells-on patches at-points [[0 1] [1 1] [1  0] [0 -1] [-1  0] [-1 1]] ] ]  ;; Si la posición x es impar, usamos un patrón diferente.
+end
+
+to go                 ;; Los hexagonos de color blanco generan otro hexagono blanco adyacente solo si este poseerá un solo vecino
+  ask cells
+    [ set n count hex-neighbors with [color = white] ]
+  ask cells
+    [ if n = 1
+        [ set color white ] ]
   tick
 end
 
-to act-bravely
-  ;; move toward the midpoint of your friend and enemy
-  facexy ([xcor] of friend + [xcor] of enemy) / 2
-         ([ycor] of friend + [ycor] of enemy) / 2
-  fd 0.1
-end
 
-to act-cowardly
-  ;; put your friend between you and your enemy
-  facexy [xcor] of friend + ([xcor] of friend - [xcor] of enemy) / 2
-         [ycor] of friend + ([ycor] of friend - [ycor] of enemy) / 2
-  fd 0.1
-end
-
-to preset [ seed ]
-  ;; sets up the model for use with a particular random seed and constant
-  ;; model parameters, so that a particular pattern can be re-created.
-  set personalities "mixed"
-  set number 68
-  random-seed seed
-  setup
-end
-
-
-; Copyright 2014 Uri Wilensky.
-; See Info tab for full copyright and license.
+; Public Domain:
+; To the extent possible under law, Uri Wilensky has waived all
+; copyright and related or neighboring rights to this model.
 @#$#@#$#@
 GRAPHICS-WINDOW
-290
-15
-727
-453
+240
+10
+775
+546
 -1
 -1
-13.0
+17.0
 1
 10
 1
@@ -78,23 +67,23 @@ GRAPHICS-WINDOW
 0
 0
 1
--16
-16
--16
-16
+-15
+15
+-15
+15
 1
 1
 1
 ticks
-200.0
+30.0
 
 BUTTON
-55
-125
-140
-158
+32
+44
+113
+77
 NIL
-setup
+setup1
 NIL
 1
 T
@@ -106,10 +95,10 @@ NIL
 1
 
 BUTTON
-155
-125
-230
-158
+73
+114
+154
+147
 NIL
 go
 T
@@ -122,38 +111,30 @@ NIL
 NIL
 0
 
-CHOOSER
-55
-70
-230
+BUTTON
+73
+79
+154
+112
+step
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+0
+
+BUTTON
 115
-personalities
-personalities
-"brave" "cowardly" "mixed"
-2
-
-SLIDER
-55
-30
-230
-63
-number
-number
-3
-200
-68.0
-1
-1
+44
+189
+77
 NIL
-HORIZONTAL
-
-BUTTON
-155
-190
-280
-223
-frozen
-preset -1153988890\n
+setup2
 NIL
 1
 T
@@ -163,284 +144,31 @@ NIL
 NIL
 NIL
 1
-
-BUTTON
-20
-190
-150
-223
-dot
-preset -1177467632\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-20
-230
-150
-263
-slinky
-preset -608717654\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-155
-230
-280
-263
-spiral
-preset 1086013561\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-20
-310
-150
-343
-yo-yo
-preset -180308068\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-TEXTBOX
-25
-165
-270
-185
-Preset configurations - Press button, then GO.
-10
-0.0
-1
-
-BUTTON
-155
-310
-280
-343
-wandering flock
-preset 961107169\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-20
-355
-280
-388
-generally cool one that eventually stops
-preset 284529528\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-155
-270
-280
-303
-spiral 2
-preset 878469395\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-20
-270
-150
-303
-slinky 2
-preset -1315170766\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-SLIDER
-750
-125
-922
-158
-seed_num
-seed_num
--10000
-10000
-0.0
-100
-1
-NIL
-HORIZONTAL
-
-BUTTON
-775
-190
-902
-223
-test
-preset seed_num\n
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-SWITCH
-780
-240
-897
-273
-show_links
-show_links
-1
-1
--1000
 
 @#$#@#$#@
-## ACKNOWLEDGMENT
-
-This model is from Chapter Two of the book "Introduction to Agent-Based Modeling: Modeling Natural, Social and Engineered Complex Systems with NetLogo", by Uri Wilensky & William Rand.
-
-* Wilensky, U. & Rand, W. (2015). Introduction to Agent-Based Modeling: Modeling Natural, Social and Engineered Complex Systems with NetLogo. Cambridge, MA. MIT Press.
-
-This model is in the IABM Textbook folder of the NetLogo Models Library. The model, as well as any updates to the model, can also be found on the textbook website: http://www.intro-to-abm.com/.
-
 ## WHAT IS IT?
 
-The "Heroes and Cowards" game, also called the "Friends and Enemies" game or the "Aggressors and Defenders" game dates back to the Fratelli Theater Group at the 1999 Embracing Complexity conference, or perhaps earlier.
+This demonstrates how to make a model that uses a hexagonal grid of cells.
 
-In the human version of this game, each person arbitrarily chooses someone else in the room to be their perceived friend, and someone to be their perceived enemy.  They don't tell anyone who they have chosen, but they all move to position themselves either such that a) they are between their friend and their enemy (BRAVE/DEFENDING), or b) such that they are behind their friend relative to their enemy (COWARDLY/FLEEING).
-
-This simple model demonstrates an idealized form of this game played out by computational agents.  Mostly it demonstrates how rich, complex, and surprising behavior can emerge from simple rules and interactions.
+The cellular automaton rules used produce a snowflake-like pattern.
 
 ## HOW IT WORKS
 
-The rules of this model are that there are two basic personality types.  All agents in the model choose a friend and an enemy.  If their personality is BRAVE, then the agent tries to stay between their enemy and their friend, protecting their friend. If their personality is COWARDLY, then the agent tries to keep their friend between them and their enemy, hiding behind their friend.
+Since patches are square, we must represent the cells as turtles instead.
 
-## HOW TO USE IT
+Each patch sprouts a "cell" turtle.  Turtles on even patch columns are offset down by half a patch.  (Since the south boundary of a patch is part of the patch, this does not move the turtle to a different patch.)
 
-Choose the NUMBER of turtles you want to examine, and choose whether the turtles should act COWARDLY, BRAVE, or MIXED.  Then press SETUP followed by GO to observe the patterns of behavior formed.
+The resulting lattice has the correct structure, but distances and angles are distorted. So the hexagons aren't actually regular, but it doesn't matter as long as you don't try to use primitives such as `distance` and `towards`.
 
-## THINGS TO NOTICE
+Also, you must use the `hex-neighbors` variable instead of the built-in `neighbors` and `neighbors4` reporters.
 
-Run the model many times and observe the different patterns of behavior.
-INSPECT or WATCH some turtles so that you can see their individual behavior.
+## RELATED MODELS
 
-## THINGS TO TRY
+This example is for stationary cells.  Hex Turtles Example shows how to make turtles that move along a hexagonal lattice.  (It would also be possible to combine both techniques in a single model.)
 
-Can you find new cool configurations with 68 turtles? How many different type can you find? What happens when you vary the number of turtles?
+Link Lattice Example and Lattice-Walking Turtles Example demonstrate another approach to making a hexagonal lattice, using links instead of just patches.
 
-## EXTENDING THE MODEL
-
-There is a bug we deliberately introduced in the SETUP of the model. Can you find it and fix it? Once you have fixed it, how does it affect the preset configurations?
-Can you find new presets?
-
-Modify the code to add more control over how many of each type of behavior there is.
-
-Change the world wrapping rules to see how that effects the results.
-
-You can create buttons that capture interesting patterns of behaviors by using the RANDOM-SEED function in NetLogo.  First set the RANDOM-SEED to different values. PRESS SETUP then GO and observe the behaviors. We created a `preset` procedure that makes it easy to create your own buttons that produce interesting behaviors. This procedure assumes a population of 68 turtles with "mixed" behaviors, but you could modify it to allow different settings. Create your own buttons that produce interesting behaviors.
-
-## NETLOGO FEATURES
-
-RANDOM-SEED initializes the NetLogo random number generator so that it always produces the same set of random numbers, enabling exact reproduction of model runs.
-
-## CREDITS AND REFERENCES
-
-Versions of the Model are described in:
-
-Bonabeau, E., & Meyer, C. (2001). Swarm intelligence. A whole new way to think about business. Harvard Business Review, 5, 107-114.
-
-Bonabeau, E., Funes, P. & Orme, B.  (2003). Exploratory Design Of Swarms. 2nd International Workshop on the Mathematics and Algorithms of Social Insects. Georgia Institute of technology, Atlanta, GA.
-
-Sweeney, L. B., & Meadows, D. (2010). The systems thinking playbook: Exercises to stretch and build learning and systems thinking capabilities.
-
-## HOW TO CITE
-
-This model is part of the textbook, “Introduction to Agent-Based Modeling: Modeling Natural, Social and Engineered Complex Systems with NetLogo.”
-
-If you mention this model or the NetLogo software in a publication, we ask that you include the citations below.
-
-For the model itself:
-
-* Stonedahl, F., Wilensky, U., Rand, W. (2014).  NetLogo Heroes and Cowards model.  http://ccl.northwestern.edu/netlogo/models/HeroesandCowards.  Center for Connected Learning and Computer-Based Modeling, Northwestern Institute on Complex Systems, Northwestern University, Evanston, IL.
-
-Please cite the NetLogo software as:
-
-* Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
-
-Please cite the textbook as:
-
-* Wilensky, U. & Rand, W. (2015). Introduction to Agent-Based Modeling: Modeling Natural, Social and Engineered Complex Systems with NetLogo. Cambridge, MA. MIT Press.
-
-## COPYRIGHT AND LICENSE
-
-Copyright 2014 Uri Wilensky.
-
-![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
-
-This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
-
-Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
-
-<!-- 2014 Cite: Stonedahl, F., Wilensky, U., Rand, W. -->
+<!-- 2004 -->
 @#$#@#$#@
 default
 true
@@ -584,6 +312,11 @@ Circle -16777216 true false 113 68 74
 Polygon -10899396 true false 189 233 219 188 249 173 279 188 234 218
 Polygon -10899396 true false 180 255 150 210 105 210 75 240 135 240
 
+hex
+false
+0
+Polygon -7500403 true true 0 150 75 30 225 30 300 150 225 270 75 270
+
 house
 false
 0
@@ -726,6 +459,8 @@ Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
 NetLogo 6.4.0
 @#$#@#$#@
+setup1
+repeat 20 [ go ]
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -741,5 +476,5 @@ true
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 @#$#@#$#@
-1
+0
 @#$#@#$#@
