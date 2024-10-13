@@ -1,11 +1,12 @@
 turtles-own [is_active]
 to setup
+  reset-ticks
   ca
   crt 100 [
     setxy random-xcor random-ycor
     set shape "cow"
-    set is_active one-of [true false]
-    set color ifelse-value is_active [green] [red]
+    set is_active one-of [true false] ;;Estado de activacion
+    set color ifelse-value is_active [green] [red] ;;Color respectoa su estado
   ]
 end
 
@@ -36,11 +37,12 @@ to wire3
 end
 
 to wire4
-  ask links [ die ]  ;; Remove all existing links
+  reset-ticks
+  ask links [ die ]
   ask turtles [
     ask turtles with [who > [who] of myself] [
-      if random-float 1.0 < wiring-prob [
-        ;; Check if both turtles have fewer links than their defined `num-link`
+      if random-float 1.0 < wiring-prob [ ;;restricciones en base a la probabilidad de link
+        ;; restricciones en base a la cantidad de links de cada tortuga
         if count link-neighbors < num-links and [count link-neighbors] of myself < [num-links] of myself [
           create-link-with myself
         ]
@@ -51,17 +53,18 @@ end
 
 to go
   ask turtles [
-    ;; Check all connected neighbors
+
+    ;; Checkea todos los vecinos conectados
     ask link-neighbors [
-      ;; If both turtles have the same is_active state
-      if [is_active] of myself = is-active [
-        ;; Randomly switch one of the two turtles' states
+      ;; Si ambos tienen el mismo estado
+      if [is_active] of myself = is_active [
+        ;; se cambia el estado de alguna de las 2 tortugas
         ifelse random 2 = 0
-        [ set is_active not is_active ]  ;; Change the state of this turtle
-        [ ask myself [ set is_active not is_active ] ]  ;; Change the state of the other turtle
+        [ set is_active not is_active ]
+        [ ask myself [ set is_active not is_active ] ]
       ]
     ]
-    ;; Update the color based on the new state
+    ;; se actuliza el color
     set color ifelse-value is_active [green] [red]
   ]
   tick
@@ -186,7 +189,7 @@ num-links
 num-links
 0
 100
-21.0
+2.0
 1
 1
 NIL
@@ -200,6 +203,23 @@ BUTTON
 NIL
 wire4
 NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+827
+347
+890
+380
+NIL
+go
+T
 1
 T
 OBSERVER
