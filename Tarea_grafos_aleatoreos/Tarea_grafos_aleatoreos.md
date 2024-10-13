@@ -8,7 +8,7 @@ Conexiones\
 
 # Preguntas
 ## Se quilibra el grafo? Bajo que condiciones?
-[![Watch the video](https://github.com/Nispeter/Multiagentes_2024-2/blob/main/Tarea_grafos_aleatoreos/2024-10-13%2012-20-44.mp4)]
+[![Watch the video](https://raw.githubusercontent.com/Nispeter/Multiagentes_2024-2/blob/main/Tarea_grafos_aleatoreos/2024-10-13%2012-20-44.mp4)]
 Se realizan 2 pruebas con wire4
 - La priemra queda inestable por siempre
 - La segunda se estabiliza de inmediato
