@@ -229,42 +229,60 @@ NIL
 NIL
 1
 
+MONITOR
+848
+90
+919
+135
+NIL
+count links
+17
+1
+11
+
+MONITOR
+863
+180
+1073
+225
+NIL
+max[count link-neighbors] of turtles
+17
+1
+11
+
+MONITOR
+864
+239
+1069
+284
+NIL
+min[count link-neighbors] of turtles
+17
+1
+11
+
 @#$#@#$#@
-## WHAT IS IT?
+# Tarea Grafos Aleatorios 
+Nicolas Parra
+# Preguntas
+## Se quilibra el grafo? Bajo que condiciones?
+Se realizan 2 pruebas con wire4
+- La priemra queda inestable por siempre
+- La segunda se estabiliza de inmediato
+Entonces depende de la cantidad de conexiones que tenga cada nodo
 
-(a general understanding of what the model is trying to show or explain)
+## Si no se equilibra, con que cardinal del conjunto de estados se podría lograr esto?
+Para un grafo completamente conexo se requieren al menos n colores para que todos los nodos esten con distintos estados, con n la cantidad de nodos del grafo.
+En caso contrario se requieren una cantidad igual a el grado del nodo con máximas conexiones + 1
 
-## HOW IT WORKS
+## Qué problema tradicional sobre grafos se está modelando 
+Coloreo de grafos (o de mapas).
 
-(what rules the agents use to create the overall behavior of the model)
 
-## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
 
-## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
-
-## THINGS TO TRY
-
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
-
-## EXTENDING THE MODEL
-
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
-
-## NETLOGO FEATURES
-
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
-
-## RELATED MODELS
-
-(models in the NetLogo Models Library and elsewhere which are of related interest)
-
-## CREDITS AND REFERENCES
-
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
 @#$#@#$#@
 default
 true

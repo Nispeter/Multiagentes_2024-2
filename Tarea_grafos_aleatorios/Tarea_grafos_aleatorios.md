@@ -11,12 +11,11 @@ Conexiones\
 
 
 https://github.com/user-attachments/assets/81bbe6a3-1319-466e-b722-936d44efead6
-
-
+Se encuentra un equilibrio comparando los sigueintes casos
 Se realizan 2 pruebas con wire4
 - La priemra queda inestable por siempre
 - La segunda se estabiliza de inmediato
-Entonces depende de la cantidad de conexiones que tenga cada nodo
+Entonces depende de la cantidad de conexiones que tenga cada nodo, donde se equilibra con pocas conexiones.
 ## Si no se equilibra, con que cardinal del conjunto de estados se podría lograr esto?
 Para un grafo completamente conexo se requieren al menos n colores para que todos los nodos esten con distintos estados, con n la cantidad de nodos del grafo.
 En caso contrario se requieren una cantidad igual a el grado del nodo con máximas conexiones + 1
