@@ -1,6 +1,6 @@
 import pandas as pd
 
-data = pd.read_csv("a.csv", header=None).transpose()
+data = pd.read_csv("b.csv", header=None).transpose()
 
 data.columns = data.iloc[0]
 data = data.drop(0)
@@ -32,6 +32,6 @@ for immun_type in immunization_types:
 
 metrics_df = pd.DataFrame.from_dict(metrics, orient='index')
 
-metrics_df.to_csv("metrics_output.csv", index=False)
+metrics_df.to_csv("metrics_output_b.csv", index=False)
 
 print("Metrics saved to 'metrics_output.csv'")
