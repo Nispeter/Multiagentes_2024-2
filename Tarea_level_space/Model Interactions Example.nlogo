@@ -1,60 +1,69 @@
-turtles-own [
-  edad
+extensions [ ls ] ; Extensión para usar LevelSpace
+
+globals [
+  wolf-sheep-predation-model ; Referencia al modelo de predación lobo-oveja
+  climate-change-model       ; Referencia al modelo de cambio climatico
 ]
 
-globals [hongos-algas-ratio prob-muerte-alga-aumentada]
-
 to setup
-  clear-all
-  reset-ticks
-  system-dynamics-setup
+  ; Reiniciar LevelSpace y limpiar el entorno
+  ls:reset ; Restablece todos los modelos en LevelSpace
+  clear-all ; Limpia todos los datos y gráficos del modelo principal
 
-  create-turtles algas [
-    set shape "circle"
-    set color green
-    set edad 0
-    setxy random-xcor random-ycor
+  ; Crear los dos modelos
+  ls:create-interactive-models 1 "Climate Change.nlogo"
+  set climate-change-model last ls:models ; Guardar el modelo de cambio climático en la variable global
+
+  ls:create-interactive-models 1 "Wolf Sheep Predation.nlogo"
+  set wolf-sheep-predation-model last ls:models ; Guardar el modelo de predación lobo-oveja en la variable global
+  ls:ask wolf-sheep-predation-model [ set model-version "sheep-wolves-grass" ] ; Configurar la versión del modelo
+
+  ; Ocultar el modelo de cambio climatico temporalmente para acelerar su ejecución inicial
+  ls:hide climate-change-model
+
+  ; Ejecutar la configuración de ambos modelos
+  ls:ask ls:models [ setup ]
+
+  ls:ask climate-change-model [
+    repeat 2 [ add-cloud ] ; Agrega nubes al modelo
+    repeat 10 [ add-co2 ] ; Agrega dióxido de carbono al modelo
+    repeat 7000 [ go ] ; Ejecuta el modelo para estabilizar los valores
   ]
-  system-dynamics-do-plot
+
+  ; Mostrar nuevamente el modelo de cambio climático
+  ls:show climate-change-model
+
+  reset-ticks ; Reiniciar el contador de ticks en el modelo principal
 end
 
 to go
-  system-dynamics-go
-  system-dynamics-do-plot
-  alga-step
-end
 
-to alga-step
-  ask turtles [
-    set edad edad + 1
-    set color green - (edad)
-    if edad > edad-reproduccion-alga and random 101 < prob-reproduccion-alga [
-      hatch 1 [
-        set edad 0
-        set color green
-        setxy random-xcor random-ycor
-      ]
-    ]
-    ;; set hongos-algas-ratio max list 0 (hongos / algas - umbral-hongos-algas) * 100 * 5
-    ;; set prob-muerte-alga-aumentada prob-muerte-alga + hongos-algas-ratio
-    ifelse hongos / algas >  umbral-hongos-algas [
-      set prob-muerte-alga-aumentada prob-muerte-alga + 30
-    ]
-    [
-      set prob-muerte-alga-aumentada prob-muerte-alga
-    ]
-    if edad > edad-muerte-alga and random 101 < prob-muerte-alga-aumentada [
-      die
-    ]
-    set algas count turtles
+  ; Calcular el nuevo tiempo de rebrote en una variabl de LevelSpace.
+  ls:let new-regrowth-time 25 + ( abs [ temperature - 55 ] ls:of climate-change-model ) / 2
+
+  ; Redondear el tiempo de rebrote y aplicarlo al modelo de predación lobo-oveja
+  ls:ask wolf-sheep-predation-model [
+    set grass-regrowth-time round new-regrowth-time ; Asignar el nuevo tiempo de rebrote redondeado
   ]
+
+  ; Obtener el número total de mamíferos en el modelo de predación
+  let total-mammals  count wolves + count sheep ls:of wolf-sheep-predation-model
+
+  ;Agregar CO2 proporcional a la cantidad de mamíferos
+  ls:ask climate-change-model [
+    add-co2-n  total-mammals / 10 ; Escalar la cantidad de CO2 agregado
+  ]
+
+  ls:ask ls:models [ go ]
+
+  tick
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
+15
 10
-647
-448
+192
+188
 -1
 -1
 13.0
@@ -67,21 +76,21 @@ GRAPHICS-WINDOW
 1
 1
 1
--16
-16
--16
-16
-0
-0
+-6
+6
+-6
+6
+1
+1
 1
 ticks
 30.0
 
 BUTTON
-31
-100
-94
-133
+15
+115
+195
+220
 NIL
 go
 T
@@ -92,13 +101,13 @@ NIL
 NIL
 NIL
 NIL
-1
+0
 
 BUTTON
-32
-20
-95
-53
+15
+10
+195
+115
 NIL
 setup
 NIL
@@ -111,186 +120,42 @@ NIL
 NIL
 1
 
-BUTTON
-15
-60
-109
-93
-go-one-tick
-go
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-PLOT
-539
-255
-739
-405
-populations
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-true
-"" ""
-PENS
-"hongos" 1.0 0 -5825686 true "" ""
-"algas" 1.0 0 -10899396 true "" ""
-
-SLIDER
-11
-190
-183
-223
-edad-muerte-alga
-edad-muerte-alga
-0
-100
-20.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-11
-314
-192
-347
-edad-reproduccion-alga
-edad-reproduccion-alga
-0
-100
-10.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-10
-272
-189
-305
-prob-reproduccion-alga
-prob-reproduccion-alga
-0
-100
-20.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-12
-232
-184
-265
-prob-muerte-alga
-prob-muerte-alga
-0
-100
-15.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-12
-360
-184
-393
-umbral-hongos-algas
-umbral-hongos-algas
-0
-1
-0.4
-0.1
-1
-NIL
-HORIZONTAL
-
-MONITOR
-135
-129
-192
-174
-NIL
-algas
-17
-1
-11
-
-MONITOR
-135
-74
-195
-119
-h/a ratio
-hongos-algas-ratio
-17
-1
-11
-
-MONITOR
-137
-24
-194
-69
-ma
-prob-muerte-alga-aumentada
-17
-1
-11
-
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
+This is a code example for showing interactions between models in a LevelSpace model system. It shows how the temperature in the Climate Change model can be programmed to influence the grass regrowth time in the Wolf Sheep Predation model.
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
+The model creates a Wolf Sheep Predation child model and a Climate Change child model. It then sets up the Climate Change model and runs it until it is stable. Finally, this model runs both the Wolf Sheep Predation and Climate Change model, and changes the speed at which grass regrows in the Wolf Sheep Predation model based on the current temperature in the Climate Change model.
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
+Click SETUP to create the two models, and GO to run the models.
 
-## THINGS TO NOTICE
-
-(suggested things for the user to notice while running the model)
+You can now modify the various values in the Climate Change model's window, and observe how they affect the dynamics of the ecosystem.
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
+Try to dramatically change the temperature in the Climate Change model. How quickly do you see a change in the ecosystem?
+
+Try to slowly change the temperature in the Climate Change model. Are there any critical thresholds for the amount of CO2 in the model system?
 
 ## EXTENDING THE MODEL
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
+Animals produce greenhouse gases. Try to modify the model so the animals in the ecosystem somehow introduce greenhouse gases in the Climate Change model.
+
+The amount of grass in the Wolf Sheep Predation model could affect the albedo in the Climate Change model. Try to implement that in the code.
 
 ## NETLOGO FEATURES
 
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
+This model uses LevelSpace to build a small model-system of two models, and then have them affect each other.
 
 ## RELATED MODELS
 
-(models in the NetLogo Models Library and elsewhere which are of related interest)
+See the Model Visualizer and Plotter Example and the Parent Model Example.
 
-## CREDITS AND REFERENCES
-
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
+<!-- 2016 -->
 @#$#@#$#@
 default
 true
@@ -599,44 +464,8 @@ Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
 NetLogo 6.4.0
 @#$#@#$#@
+need-to-manually-make-preview-for-this-model
 @#$#@#$#@
-1.0
-    org.nlogo.sdm.gui.AggregateDrawing 13
-        org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 182 296 246 60 40
-            org.nlogo.sdm.gui.WrappedStock "hongos" "10" 1
-        org.nlogo.sdm.gui.ReservoirFigure "attributes" "attributes" 1 "FillColor" "Color" 192 192 192 153 249 30 30
-        org.nlogo.sdm.gui.RateConnection 3 183 264 230 266 284 266 NULL NULL 0 0 0
-            org.jhotdraw.figures.ChopEllipseConnector REF 3
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.nlogo.sdm.gui.WrappedRate "algas * tasa-creacion-hongos" "creacion-hongos"
-                org.nlogo.sdm.gui.WrappedReservoir  REF 2 0
-        org.nlogo.sdm.gui.RateConnection 3 368 264 446 262 532 267 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.jhotdraw.figures.ChopEllipseConnector
-                org.nlogo.sdm.gui.ReservoirFigure "attributes" "attributes" 1 "FillColor" "Color" 192 192 192 531 252 30 30
-            org.nlogo.sdm.gui.WrappedRate "hongos * tasa-muerte-hongos" "muerte-hongos" REF 2
-                org.nlogo.sdm.gui.WrappedReservoir  0   REF 12
-        org.nlogo.sdm.gui.ConverterFigure "attributes" "attributes" 1 "FillColor" "Color" 130 188 183 155 318 50 50
-            org.nlogo.sdm.gui.WrappedConverter "0.5" "tasa-creacion-hongos"
-        org.nlogo.sdm.gui.BindingConnection 2 190 328 230 266 NULL NULL 0 0 0
-            org.jhotdraw.contrib.ChopDiamondConnector REF 15
-            org.nlogo.sdm.gui.ChopRateConnector REF 4
-        org.nlogo.sdm.gui.ConverterFigure "attributes" "attributes" 1 "FillColor" "Color" 130 188 183 388 315 50 50
-            org.nlogo.sdm.gui.WrappedConverter "0.5" "tasa-muerte-hongos"
-        org.nlogo.sdm.gui.BindingConnection 2 421 323 446 262 NULL NULL 0 0 0
-            org.jhotdraw.contrib.ChopDiamondConnector REF 20
-            org.nlogo.sdm.gui.ChopRateConnector REF 9
-        org.nlogo.sdm.gui.BindingConnection 2 368 265 446 262 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.nlogo.sdm.gui.ChopRateConnector REF 9
-        org.nlogo.sdm.gui.BindingConnection 2 284 265 230 266 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 1
-            org.nlogo.sdm.gui.ChopRateConnector REF 4
-        org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 182 313 105 60 40
-            org.nlogo.sdm.gui.WrappedStock "algas" "30" 1
-        org.nlogo.sdm.gui.BindingConnection 2 317 157 230 266 NULL NULL 0 0 0
-            org.jhotdraw.standard.ChopBoxConnector REF 31
-            org.nlogo.sdm.gui.ChopRateConnector REF 4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -651,5 +480,5 @@ true
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 @#$#@#$#@
-0
+1
 @#$#@#$#@
