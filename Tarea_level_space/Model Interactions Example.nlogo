@@ -47,11 +47,12 @@ to go
   ]
 
   ; Obtener el número total de mamíferos en el modelo de predación
-  let total-mammals  count wolves + count sheep ls:of wolf-sheep-predation-model
+  ls:let total-mammals [count wolves + count sheep] ls:of wolf-sheep-predation-model
 
   ;Agregar CO2 proporcional a la cantidad de mamíferos
   ls:ask climate-change-model [
-    add-co2-n  total-mammals / 10 ; Escalar la cantidad de CO2 agregado
+    let co2-amount total-mammals / 10 ;
+    add-co2-n co2-amount ; Escalar la cantidad de CO2 agregado
   ]
 
   ls:ask ls:models [ go ]
